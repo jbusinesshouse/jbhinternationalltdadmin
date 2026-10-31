@@ -1,26 +1,141 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Surfaces */
+  --background: #eef0f4;
+  --surface: #ffffff;
+  --surface-muted: #f5f6f8;
+  --foreground: #141820;
+  --muted: #5f6b7a;
+  --muted-soft: #8b95a3;
+  --border: #e2e5eb;
+  --border-strong: #cfd4dc;
+
+  /* Brand — JBH orange + structural ink */
+  --primary: #f5832b;
+  --primary-dark: #d96f1c;
+  --primary-soft: #fff4eb;
+  --primary-ring: rgba(245, 131, 43, 0.22);
+  --ink: #1a2744;
+  --ink-soft: #2c3a55;
+
+  /* Semantic */
+  --success: #0f7a4f;
+  --success-soft: #ecf8f2;
+  --warning: #a16207;
+  --warning-soft: #fef8e8;
+  --danger: #c0352b;
+  --danger-soft: #fef1f0;
+  --info: #1d6fa5;
+  --info-soft: #eef6fb;
+
+  /* Layout */
+  --sidebar-width: 15.5rem;
+  --header-height: 3.5rem;
+  --radius: 0.5rem;
+  --radius-lg: 0.75rem;
+  --shadow-sm: 0 1px 2px rgba(20, 24, 32, 0.04);
+  --shadow-md: 0 4px 16px rgba(20, 24, 32, 0.06);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-muted: var(--muted);
+  --color-muted-soft: var(--muted-soft);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-soft: var(--primary-soft);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --font-sans: var(--font-jakarta);
   --font-mono: var(--font-geist-mono);
+  --radius-DEFAULT: var(--radius);
+  --radius-lg: var(--radius-lg);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-feature-settings: "ss01" on, "cv11" on;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Tabular figures for metrics and money */
+  .tabular,
+  .font-tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Focus visibility for keyboard users */
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  button:focus:not(:focus-visible),
+  a:focus:not(:focus-visible),
+  [tabindex]:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Soft selection using brand */
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 28%, white);
+    color: var(--foreground);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .bg-app {
+    background-color: var(--background);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 100% -20%, rgba(245, 131, 43, 0.06), transparent),
+      radial-gradient(ellipse 60% 40% at 0% 100%, rgba(26, 39, 68, 0.04), transparent);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

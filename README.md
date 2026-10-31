@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# JBH International Limited — Admin panel
 
-## Getting Started
+Internal operations panel for the J Business House marketplace (the Expo app in `../j-business-house`).
 
-First, run the development server:
+All data goes through the Express BFF (`../backend`, `/api/v1/admin/*`). This app only uses Supabase for
+sign-in; the database is locked down to the backend's service role.
+
+## Setup
+
+1. **Database** — run `j-business-house/supabase/migrations/20261012_admin_panel.sql` in the Supabase SQL editor.
+   It adds the `admin_audit_logs` table, report review columns, and the `admin_set_store_type` RPC.
+2. **Backend** — in `backend/.env`:
+   - `ADMIN_USER_IDS=<uuid>,<uuid>` — Supabase auth user IDs allowed into the panel.
+   - `CORS_ORIGINS` must include this app's origin (`http://localhost:3001` locally, the production admin URL when deployed).
+3. **This app** — copy `.env.local.example` to `.env.local` and fill in:
+   - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_API_URL` (e.g. `http://localhost:4000/api/v1`)
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev   # http://localhost:3001
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Sign in with the email/password of a Supabase user listed in `ADMIN_USER_IDS`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Sections
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Area | What it does |
+| --- | --- |
+| Overview | Pending queues, KPIs, 30-day signups/orders, latest activity |
+| Users | Search/filter, activate new wholesale sellers, freeze/restrict, change store type, message, feature store |
+| Products / Orders | Browse and inspect; deactivate, reactivate or delete products |
+| Product ads / Featured stores | Approve requests, stop running ads, feature or unfeature stores |
+| Referrals | Creator applications and referral codes with signup counts |
+| Reports / Support | Moderate reported products and users; reply to support tickets (sent as notifications) |
+| Catalog | Categories, subcategories and size options used by product upload |
+| Notifications | Broadcast in-app + push notifications to user segments |
+| Audit log | Every admin write action |
