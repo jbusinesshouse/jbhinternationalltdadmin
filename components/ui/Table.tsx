@@ -13,7 +13,7 @@ export function Th({ className, ...props }: ThHTMLAttributes<HTMLTableCellElemen
   return (
     <th
       className={cn(
-        "whitespace-nowrap border-b border-border bg-ink/[0.03] px-3 py-2 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-muted sm:px-4 sm:py-2.5",
+        "whitespace-nowrap border-b border-border bg-surface-muted px-3 py-2.5 text-left text-[10.5px] font-semibold uppercase tracking-[0.07em] text-muted-soft sm:px-4 sm:py-3",
         className
       )}
       {...props}
@@ -24,7 +24,7 @@ export function Th({ className, ...props }: ThHTMLAttributes<HTMLTableCellElemen
 export function Td({ className, ...props }: TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
-      className={cn("px-3 py-2.5 align-middle text-[13px] text-muted sm:px-4 sm:py-3", className)}
+      className={cn("px-3 py-3 align-middle text-[13px] text-muted sm:px-4 sm:py-3.5", className)}
       {...props}
     />
   );
@@ -35,8 +35,8 @@ export function Tr({ children, onClick }: { children: ReactNode; onClick?: () =>
     <tr
       onClick={onClick}
       className={cn(
-        "border-b border-border/70 last:border-b-0 transition-colors duration-100",
-        onClick && "cursor-pointer hover:bg-ink/[0.03]"
+        "border-b border-border/60 last:border-b-0 transition-colors duration-100 even:bg-surface-muted/30",
+        onClick && "cursor-pointer hover:bg-primary-soft/50"
       )}
     >
       {children}

@@ -2,11 +2,14 @@
 
 import {
   ArrowUpRight,
+  Banknote,
   Flag,
   LifeBuoy,
   Megaphone,
+  Package,
   Star,
   UserCheck,
+  Users,
   UsersRound,
 } from "lucide-react";
 import Link from "next/link";
@@ -73,7 +76,13 @@ function ActivityChart({ series }: { series: Overview["stats"]["series"] }) {
   const max = Math.max(1, ...series.map((d) => Math.max(d.signups, d.orders)));
   return (
     <div>
-      <div className="flex h-32 items-end gap-px sm:h-40 sm:gap-[2px]">
+      <div className="relative">
+        <div className="pointer-events-none absolute inset-0 flex flex-col justify-between" aria-hidden>
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="border-t border-dashed border-border/80" />
+          ))}
+        </div>
+        <div className="relative flex h-36 items-end gap-px sm:h-44 sm:gap-[2px]">
         {series.map((d) => (
           <div
             key={d.day}
@@ -81,15 +90,16 @@ function ActivityChart({ series }: { series: Overview["stats"]["series"] }) {
             title={`${d.day}: ${d.signups} signups, ${d.orders} orders`}
           >
             <div
-              className="flex-1 rounded-t-sm bg-primary/40 transition-colors group-hover:bg-primary/65"
+              className="flex-1 rounded-t bg-gradient-to-t from-primary/55 to-primary/30 transition-colors group-hover:from-primary group-hover:to-primary/70"
               style={{ height: `${(d.signups / max) * 100}%`, minHeight: d.signups ? 2 : 0 }}
             />
             <div
-              className="flex-1 rounded-t-sm bg-ink/75 transition-colors group-hover:bg-ink"
+              className="flex-1 rounded-t bg-gradient-to-t from-ink to-ink-soft/80 transition-colors group-hover:from-ink-deep group-hover:to-ink"
               style={{ height: `${(d.orders / max) * 100}%`, minHeight: d.orders ? 2 : 0 }}
             />
           </div>
         ))}
+        </div>
       </div>
       <div className="mt-2 flex justify-between text-[10px] tabular-nums text-muted-soft sm:text-[11px]">
         <span>{series[0]?.day}</span>
@@ -97,10 +107,10 @@ function ActivityChart({ series }: { series: Overview["stats"]["series"] }) {
       </div>
       <div className="mt-3 flex gap-4 text-xs text-muted">
         <span className="flex items-center gap-1.5">
-          <span className="size-2 rounded-sm bg-primary/55" aria-hidden /> Signups
+          <span className="size-2.5 rounded-full bg-primary/70" aria-hidden /> Signups
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="size-2 rounded-sm bg-ink/80" aria-hidden /> Orders
+          <span className="size-2.5 rounded-full bg-ink" aria-hidden /> Orders
         </span>
       </div>
     </div>
@@ -130,12 +140,14 @@ export function Dashboard() {
 
       {/* Hero attention + metrics */}
       <div className="mb-5 grid min-w-0 gap-3 sm:mb-6 lg:mb-7 lg:grid-cols-12 lg:gap-4">
-        <section className="min-w-0 overflow-hidden rounded-xl bg-ink text-white lg:col-span-4">
-          <div className="px-4 py-4 sm:px-5 sm:py-5">
+        <section className="relative min-w-0 overflow-hidden rounded-2xl bg-gradient-to-br from-ink to-ink-deep text-white shadow-[var(--shadow-md)] lg:col-span-4">
+          <div className="bg-grid-dark pointer-events-none absolute inset-0 opacity-70" aria-hidden />
+          <div className="pointer-events-none absolute -right-10 -top-12 size-44 rounded-full bg-primary/25 blur-3xl" aria-hidden />
+          <div className="relative px-4 py-5 sm:px-6 sm:py-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary">
               Needs attention
             </p>
-            <p className="mt-2 text-4xl font-semibold tabular-nums tracking-tight sm:text-5xl">
+            <p className="mt-3 text-5xl font-bold tabular-nums tracking-tight sm:text-6xl">
               {formatNumber(totalAttention)}
             </p>
             <p className="mt-1.5 text-sm text-white/55">
@@ -144,14 +156,14 @@ export function Dashboard() {
                 : "All review queues are clear"}
             </p>
           </div>
-          <ul className="border-t border-white/10">
+          <ul className="relative border-t border-white/10">
             {QUEUES.filter((q) => pending[q.key] > 0)
               .slice(0, 4)
               .map((q) => (
                 <li key={q.key} className="border-b border-white/10 last:border-b-0">
                   <Link
                     href={q.href}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm transition hover:bg-white/[0.06] sm:px-5"
+                    className="flex items-center gap-3 px-4 py-3 text-sm transition hover:bg-white/[0.07] sm:px-6"
                   >
                     <q.icon className="size-3.5 shrink-0 text-primary" aria-hidden />
                     <span className="min-w-0 flex-1 truncate text-white/80">{q.label}</span>
@@ -168,30 +180,47 @@ export function Dashboard() {
           </ul>
         </section>
 
-        <section className="grid min-w-0 grid-cols-2 gap-3 lg:col-span-8 lg:grid-cols-2">
+        <section className="grid min-w-0 grid-cols-2 gap-3 lg:col-span-8 lg:grid-cols-3">
           {[
             {
               label: "Users",
               value: formatNumber(stats.users.total),
               sub: `+${formatNumber(stats.users.newLast7Days)} in 7 days`,
+              icon: Users,
+              tint: "bg-sky-50 text-sky-600 ring-sky-100",
             },
             {
               label: "Active products",
               value: formatNumber(stats.products.active),
               sub: `${formatNumber(stats.products.total)} listed`,
+              icon: Package,
+              tint: "bg-violet-50 text-violet-600 ring-violet-100",
             },
             {
               label: "Completed sales",
               value: formatBdt(stats.revenue.completedSalesTotal),
               sub: `${formatNumber(stats.orders.byStatus.completed ?? 0)} orders`,
+              icon: Banknote,
+              tint: "bg-emerald-50 text-emerald-600 ring-emerald-100",
             },
           ].map((m) => (
             <div
               key={m.label}
-              className="rounded-xl border border-border bg-surface px-3.5 py-3.5 shadow-[var(--shadow-sm)] sm:px-4 sm:py-4"
+              className="group flex flex-col justify-between rounded-2xl border border-border bg-surface px-4 py-4 shadow-card transition-shadow last:col-span-2 hover:shadow-[var(--shadow-md)] sm:px-5 sm:py-5 lg:last:col-span-1"
             >
-              <p className="text-[11px] font-medium text-muted">{m.label}</p>
-              <p className="mt-1.5 text-xl font-semibold tabular-nums tracking-tight text-ink sm:text-2xl">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-muted">{m.label}</p>
+                <span
+                  className={cn(
+                    "flex size-8 items-center justify-center rounded-lg ring-1 ring-inset",
+                    m.tint
+                  )}
+                  aria-hidden
+                >
+                  <m.icon className="size-4" />
+                </span>
+              </div>
+              <p className="mt-3 text-2xl font-bold tabular-nums tracking-tight text-ink sm:text-[1.75rem]">
                 {m.value}
               </p>
               <p className="mt-1 text-[11px] text-muted-soft sm:text-xs">{m.sub}</p>
@@ -201,9 +230,9 @@ export function Dashboard() {
       </div>
 
       {/* Full queue list — compact, correctly aligned */}
-      <section className="mb-5 rounded-xl border border-border bg-surface shadow-[var(--shadow-sm)] sm:mb-6 lg:mb-7">
-        <div className="flex items-center justify-between border-b border-border px-3 py-2.5 sm:px-4">
-          <h2 className="text-sm font-semibold tracking-tight text-foreground">All queues</h2>
+      <section className="mb-5 overflow-hidden rounded-2xl border border-border bg-surface shadow-card sm:mb-6 lg:mb-7">
+        <div className="flex items-center justify-between border-b border-border/70 px-3.5 py-3 sm:px-5">
+          <h2 className="text-[15px] font-semibold tracking-tight text-ink">All queues</h2>
           <p className="text-xs text-muted">{QUEUES.length} queues</p>
         </div>
         <ul className="grid grid-cols-1 gap-px bg-border sm:grid-cols-2">
@@ -214,14 +243,16 @@ export function Dashboard() {
                 <Link
                   href={q.href}
                   className={cn(
-                    "flex items-center gap-3 bg-surface px-3 py-2.5 transition-colors hover:bg-surface-muted/80 sm:px-4",
-                    count > 0 && "bg-primary-soft/30 hover:bg-primary-soft/45"
+                    "flex items-center gap-3 bg-surface px-3.5 py-3 transition-colors hover:bg-surface-muted/80 sm:px-5",
+                    count > 0 && "bg-primary-soft/40 hover:bg-primary-soft/70"
                   )}
                 >
                   <span
                     className={cn(
-                      "flex size-8 shrink-0 items-center justify-center rounded-md",
-                      count > 0 ? "bg-primary/15 text-primary" : "bg-surface-muted text-muted-soft"
+                      "flex size-9 shrink-0 items-center justify-center rounded-lg ring-1 ring-inset",
+                      count > 0
+                        ? "bg-primary/10 text-primary ring-primary/20"
+                        : "bg-surface-muted text-muted-soft ring-border"
                     )}
                   >
                     <q.icon className="size-3.5" aria-hidden />
@@ -253,7 +284,7 @@ export function Dashboard() {
           <ActivityChart series={stats.series} />
         </Card>
         <Card title="Orders by status" description={`${formatNumber(stats.orders.total)} total`}>
-          <div className="mb-3 flex h-1.5 overflow-hidden rounded-full bg-surface-muted">
+          <div className="mb-4 flex h-2 gap-0.5 overflow-hidden rounded-full bg-surface-muted">
             {Object.entries(stats.orders.byStatus).map(([status, count]) => (
               <div
                 key={status}

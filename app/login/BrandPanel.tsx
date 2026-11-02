@@ -4,7 +4,7 @@
  */
 export function BrandPanel() {
   return (
-    <aside className="relative hidden min-h-screen overflow-hidden bg-ink lg:flex lg:w-[46%] lg:shrink-0 lg:flex-col lg:justify-between">
+    <aside className="relative hidden min-h-screen overflow-hidden bg-gradient-to-br from-ink via-ink to-ink-deep lg:flex lg:w-[46%] lg:shrink-0 lg:flex-col lg:justify-between">
       {/* Network / trade-route geometry */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <svg
@@ -32,13 +32,13 @@ export function BrandPanel() {
             <circle cx="520" cy="340" r="2.5" opacity="0.5" />
           </g>
         </svg>
-        <div className="absolute -left-24 top-1/4 size-72 rounded-full bg-primary/20 blur-3xl" />
+        <div className="absolute -left-24 top-1/4 size-80 rounded-full bg-primary/25 blur-3xl" />
         <div className="absolute -right-16 bottom-1/4 size-64 rounded-full bg-white/[0.04] blur-2xl" />
       </div>
 
       <div className="relative z-10 px-10 pt-10 xl:px-14 xl:pt-12">
         <div className="flex items-center gap-3">
-          <span className="flex size-10 items-center justify-center rounded-[var(--radius)] bg-primary text-base font-bold tracking-tight text-white">
+          <span className="flex size-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#f99a50] to-primary-dark text-base font-extrabold tracking-tight text-white shadow-[0_6px_16px_-4px_rgba(245,131,43,0.6),inset_0_1px_0_rgba(255,255,255,0.3)]">
             J
           </span>
           <div className="leading-tight">
@@ -52,7 +52,7 @@ export function BrandPanel() {
         <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
           J Business House
         </p>
-        <p className="mt-4 max-w-md text-[1.85rem] font-semibold leading-[1.18] tracking-tight text-white xl:text-[2.15rem]">
+        <p className="mt-4 max-w-md text-[1.95rem] font-bold leading-[1.15] tracking-tight text-white xl:text-[2.4rem]">
           Connecting businesses across Bangladesh&apos;s wholesale marketplace.
         </p>
         <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/60 xl:text-[15px]">
@@ -60,13 +60,16 @@ export function BrandPanel() {
           purpose-built operations console.
         </p>
 
-        <dl className="mt-10 grid max-w-sm grid-cols-3 gap-5 border-t border-white/10 pt-7">
+        <dl className="mt-10 grid max-w-sm grid-cols-3 gap-3">
           {[
             { label: "Marketplace", value: "B2B" },
             { label: "Focus", value: "Ops" },
             { label: "Access", value: "Admin" },
           ].map((item) => (
-            <div key={item.label}>
+            <div
+              key={item.label}
+              className="rounded-xl border border-white/10 bg-white/[0.05] px-3.5 py-3 backdrop-blur-sm"
+            >
               <dt className="text-[10px] font-medium uppercase tracking-[0.08em] text-white/40">
                 {item.label}
               </dt>

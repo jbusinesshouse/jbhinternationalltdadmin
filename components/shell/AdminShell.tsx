@@ -2,6 +2,7 @@
 
 import {
   Bell,
+  ChevronRight,
   Flag,
   FolderTree,
   LayoutDashboard,
@@ -123,24 +124,31 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pending = data?.pending;
 
   return (
-    <nav className="flex h-full flex-col bg-ink text-white" aria-label="Admin navigation">
-      <div className="flex h-14 items-center gap-3 border-b border-white/10 px-4">
+    <nav
+      className="relative flex h-full flex-col overflow-hidden bg-gradient-to-b from-ink to-ink-deep text-white"
+      aria-label="Admin navigation"
+    >
+      <div
+        className="pointer-events-none absolute -left-16 -top-16 size-56 rounded-full bg-primary/15 blur-3xl"
+        aria-hidden
+      />
+      <div className="relative flex h-16 items-center gap-3 border-b border-white/[0.08] px-5">
         <span
-          className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary text-[13px] font-bold tracking-tight text-white"
+          className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#f99a50] to-primary-dark text-sm font-extrabold tracking-tight text-white shadow-[0_4px_12px_-2px_rgba(245,131,43,0.55),inset_0_1px_0_rgba(255,255,255,0.3)]"
           aria-hidden
         >
           J
         </span>
         <div className="min-w-0 leading-tight">
-          <p className="truncate text-sm font-semibold tracking-tight">JBH Admin</p>
+          <p className="truncate text-[15px] font-bold tracking-tight">JBH Admin</p>
           <p className="truncate text-[11px] text-white/45">International Limited</p>
         </div>
       </div>
 
-      <div className="flex-1 space-y-5 overflow-y-auto px-2.5 py-4">
+      <div className="relative flex-1 space-y-6 overflow-y-auto px-3 py-5">
         {NAV.map((group) => (
           <div key={group.section}>
-            <p className="px-2.5 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-white/35">
+            <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/30">
               {group.section}
             </p>
             <ul className="space-y-0.5">
@@ -154,29 +162,29 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                       onClick={onNavigate}
                       aria-current={active ? "page" : undefined}
                       className={cn(
-                        "group relative flex items-center gap-2.5 rounded-md px-2.5 py-[7px] text-[13px] transition-colors duration-150",
+                        "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] transition-all duration-150",
                         active
-                          ? "bg-white/10 font-semibold text-white"
-                          : "font-medium text-white/65 hover:bg-white/[0.06] hover:text-white"
+                          ? "bg-gradient-to-r from-primary/20 to-white/[0.06] font-semibold text-white ring-1 ring-inset ring-white/10"
+                          : "font-medium text-white/60 hover:bg-white/[0.06] hover:text-white"
                       )}
                     >
                       {active && (
                         <span
-                          className="absolute inset-y-1.5 left-0 w-[2.5px] rounded-r-full bg-primary"
+                          className="absolute inset-y-2 -left-3 w-[3px] rounded-r-full bg-primary shadow-[0_0_12px_rgba(245,131,43,0.8)]"
                           aria-hidden
                         />
                       )}
                       <item.icon
                         className={cn(
-                          "size-[15px] shrink-0",
-                          active ? "text-primary" : "text-white/40 group-hover:text-white/70"
+                          "size-4 shrink-0 transition-colors",
+                          active ? "text-primary" : "text-white/40 group-hover:text-white/75"
                         )}
                         strokeWidth={active ? 2.25 : 1.75}
                         aria-hidden
                       />
                       <span className="flex-1 truncate">{item.label}</span>
                       {count > 0 && (
-                        <span className="min-w-[1.2rem] rounded bg-primary px-1.5 text-center text-[10px] font-semibold leading-5 tabular-nums text-white">
+                        <span className="min-w-[1.35rem] rounded-full bg-primary px-1.5 text-center text-[10px] font-bold leading-[1.15rem] tabular-nums text-white shadow-[0_2px_6px_-1px_rgba(245,131,43,0.6)]">
                           {count > 99 ? "99+" : count}
                         </span>
                       )}
@@ -189,11 +197,17 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         ))}
       </div>
 
-      <div className="border-t border-white/10 px-4 py-3">
-        <p className="text-[10px] font-medium uppercase tracking-wider text-white/35">
-          J Business House
-        </p>
-        <p className="mt-0.5 text-[11px] text-white/50">Operations console</p>
+      <div className="relative border-t border-white/[0.08] px-5 py-4">
+        <div className="flex items-center gap-2.5">
+          <span className="relative flex size-2" aria-hidden>
+            <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400/60" />
+            <span className="relative inline-flex size-2 rounded-full bg-emerald-400" />
+          </span>
+          <div className="leading-tight">
+            <p className="text-[11px] font-semibold text-white/70">J Business House</p>
+            <p className="text-[10px] text-white/40">Operations console</p>
+          </div>
+        </div>
       </div>
     </nav>
   );
@@ -202,7 +216,7 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 function FullScreen({ children }: { children: ReactNode }) {
   return (
     <div className="bg-app flex min-h-screen items-center justify-center p-6">
-      <div className="w-full max-w-md rounded-xl border border-border bg-surface p-7 text-center shadow-[var(--shadow-md)]">
+      <div className="animate-pop-in w-full max-w-md rounded-2xl border border-border bg-surface p-8 text-center shadow-[var(--shadow-md)]">
         {children}
       </div>
     </div>
@@ -275,11 +289,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div
-            className="absolute inset-0 bg-ink/50 backdrop-blur-[2px]"
+            className="animate-fade-in absolute inset-0 bg-ink-deep/60 backdrop-blur-[3px]"
             onClick={() => setMobileOpen(false)}
             aria-hidden
           />
-          <aside className="relative h-full w-[var(--sidebar-width)] shadow-[var(--shadow-md)]">
+          <aside className="animate-slide-in relative h-full w-[var(--sidebar-width)] shadow-[var(--shadow-md)]">
             <button
               type="button"
               onClick={() => setMobileOpen(false)}
@@ -294,7 +308,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       )}
 
       <div className="min-w-0 lg:pl-[var(--sidebar-width)]">
-        <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b border-border bg-surface/90 px-3 backdrop-blur-md sm:h-14 sm:gap-3 sm:px-5 lg:px-6">
+        <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-border/80 bg-surface/80 px-3 backdrop-blur-xl sm:h-16 sm:gap-3 sm:px-5 lg:px-8">
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
@@ -308,21 +322,27 @@ export function AdminShell({ children }: { children: ReactNode }) {
             <p className="truncate text-sm font-semibold tracking-tight text-ink lg:hidden">
               JBH Admin
             </p>
-            <div className="hidden items-baseline gap-2 lg:flex">
-              <p className="text-[11px] font-medium uppercase tracking-[0.06em] text-muted-soft">
-                JBH International Limited
-              </p>
-              <span className="text-border-strong" aria-hidden>
-                /
-              </span>
-              <p className="text-sm font-medium text-foreground">{pageTitle}</p>
+            <div className="hidden items-center gap-2 lg:flex">
+              <p className="text-xs font-medium text-muted-soft">JBH International Limited</p>
+              <ChevronRight className="size-3.5 text-border-strong" aria-hidden />
+              <p className="text-sm font-semibold text-ink">{pageTitle}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-3">
-            <div className="hidden min-w-0 text-right sm:block">
-              <p className="truncate text-xs font-medium text-foreground">{state.email}</p>
-              <p className="text-[10px] text-muted-soft">Administrator</p>
+            <div className="flex items-center gap-2.5 rounded-full border border-border bg-surface py-1 pl-1 pr-1 shadow-[var(--shadow-sm)] sm:pr-3.5">
+              <span
+                className="flex size-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-ink-soft to-ink text-[11px] font-bold uppercase text-white"
+                aria-hidden
+              >
+                {(state.email ?? "A").charAt(0)}
+              </span>
+              <div className="hidden min-w-0 leading-tight sm:block">
+                <p className="max-w-[11rem] truncate text-xs font-semibold text-foreground">
+                  {state.email}
+                </p>
+                <p className="text-[10px] text-muted-soft">Administrator</p>
+              </div>
             </div>
             <Button variant="ghost" size="sm" onClick={() => void signOut()} aria-label="Sign out">
               <LogOut className="size-3.5" />
@@ -331,7 +351,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        <main className="mx-auto w-full min-w-0 max-w-[90rem] overflow-x-hidden px-3 py-4 sm:px-5 sm:py-5 lg:px-8 lg:py-7">
+        <main className="mx-auto w-full min-w-0 max-w-[90rem] overflow-x-hidden px-3 py-5 sm:px-5 sm:py-6 lg:px-8 lg:py-8">
           {children}
         </main>
       </div>

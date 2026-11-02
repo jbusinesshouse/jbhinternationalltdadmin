@@ -93,7 +93,7 @@ export function LoginForm() {
 
       {alertMessage && (
         <div
-          className="rounded-[var(--radius)] border border-red-200/80 bg-danger-soft px-3.5 py-3 text-sm leading-relaxed text-danger"
+          className="rounded-xl border border-red-200/80 bg-danger-soft px-3.5 py-3 text-sm leading-relaxed text-danger"
           role="alert"
         >
           {alertMessage}

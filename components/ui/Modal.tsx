@@ -40,7 +40,7 @@ export function Modal({
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 pt-[8vh]">
       <div
-        className="absolute inset-0 bg-ink/45 backdrop-blur-[2px] transition-opacity"
+        className="animate-fade-in absolute inset-0 bg-ink-deep/55 backdrop-blur-[3px]"
         onClick={onClose}
         aria-hidden
       />
@@ -49,13 +49,13 @@ export function Modal({
         aria-modal="true"
         aria-labelledby="modal-title"
         className={cn(
-          "relative w-full rounded-[var(--radius-lg)] border border-border bg-surface shadow-[var(--shadow-md)]",
+          "animate-pop-in relative w-full rounded-2xl border border-border bg-surface shadow-[0_24px_60px_-12px_rgba(13,22,48,0.35)]",
           wide ? "max-w-2xl" : "max-w-md"
         )}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4">
+        <div className="flex items-start justify-between gap-4 border-b border-border/80 px-5 py-4 sm:px-6">
           <div className="min-w-0">
-            <h3 id="modal-title" className="text-base font-semibold tracking-tight text-foreground">
+            <h3 id="modal-title" className="text-base font-semibold tracking-tight text-ink">
               {title}
             </h3>
             {description && <p className="mt-1 text-sm leading-relaxed text-muted">{description}</p>}
@@ -69,9 +69,9 @@ export function Modal({
             <X className="size-4" />
           </button>
         </div>
-        <div className="space-y-4 px-5 py-4">{children}</div>
+        <div className="space-y-4 px-5 py-5 sm:px-6">{children}</div>
         {footer && (
-          <div className="flex justify-end gap-2 rounded-b-[var(--radius-lg)] border-t border-border bg-surface-muted/60 px-5 py-3">
+          <div className="flex justify-end gap-2 rounded-b-2xl border-t border-border/80 bg-surface-muted/70 px-5 py-3.5 sm:px-6">
             {footer}
           </div>
         )}

@@ -20,11 +20,11 @@ export default function LoginPage() {
     <div className="flex min-h-screen bg-surface">
       <BrandPanel />
 
-      <main className="relative flex min-h-screen flex-1 flex-col px-6 py-10 sm:px-10 lg:justify-center lg:px-16 lg:py-12 xl:px-24">
+      <main className="bg-app relative flex min-h-screen flex-1 flex-col px-6 py-10 sm:px-10 lg:justify-center lg:px-16 lg:py-12 xl:px-24">
         {/* Mobile brand strip */}
         <div className="mb-10 shrink-0 lg:hidden">
           <div className="flex items-center gap-3">
-            <span className="flex size-9 items-center justify-center rounded-[var(--radius)] bg-ink text-sm font-bold tracking-tight text-white">
+            <span className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#f99a50] to-primary-dark text-sm font-extrabold tracking-tight text-white shadow-[0_4px_12px_-2px_rgba(245,131,43,0.55)]">
               J
             </span>
             <div className="leading-tight">
@@ -34,12 +34,12 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <div className="mx-auto w-full max-w-[22.5rem] flex-1 lg:flex-none">
-          <header className="mb-8">
+        <div className="animate-fade-in mx-auto w-full max-w-[24rem] flex-1 rounded-2xl border border-border bg-surface p-6 shadow-[var(--shadow-md)] sm:p-8 lg:flex-none">
+          <header className="mb-7">
             <p className="hidden text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-soft lg:block">
               JBH International Limited
             </p>
-            <h1 className="text-[1.625rem] font-semibold tracking-tight text-ink lg:mt-3">
+            <h1 className="text-[1.75rem] font-bold tracking-tight text-ink lg:mt-3">
               Welcome back
             </h1>
             <p className="mt-2 text-sm leading-relaxed text-muted">

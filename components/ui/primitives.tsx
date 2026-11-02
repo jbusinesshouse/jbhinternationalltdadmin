@@ -16,12 +16,14 @@ type ButtonVariant = "primary" | "secondary" | "danger" | "ghost" | "success";
 
 const buttonVariants: Record<ButtonVariant, string> = {
   primary:
-    "bg-primary text-white hover:bg-primary-dark shadow-[var(--shadow-sm)] focus-visible:ring-primary/30",
+    "bg-gradient-to-b from-[#f78d3a] to-primary text-white shadow-[0_1px_2px_rgba(217,112,26,0.45),inset_0_1px_0_rgba(255,255,255,0.22)] hover:from-primary hover:to-primary-dark focus-visible:ring-primary/30",
   secondary:
-    "bg-surface text-foreground border border-border-strong hover:bg-surface-muted shadow-[var(--shadow-sm)]",
-  danger: "bg-danger text-white hover:brightness-95 shadow-[var(--shadow-sm)]",
-  success: "bg-success text-white hover:brightness-95 shadow-[var(--shadow-sm)]",
-  ghost: "text-muted hover:bg-surface-muted hover:text-foreground",
+    "bg-surface text-foreground border border-border-strong hover:bg-surface-muted hover:border-muted-soft/60 shadow-[var(--shadow-sm)]",
+  danger:
+    "bg-danger text-white shadow-[0_1px_2px_rgba(194,54,44,0.4),inset_0_1px_0_rgba(255,255,255,0.15)] hover:brightness-95",
+  success:
+    "bg-success text-white shadow-[0_1px_2px_rgba(13,122,78,0.4),inset_0_1px_0_rgba(255,255,255,0.15)] hover:brightness-95",
+  ghost: "text-muted hover:bg-ink/[0.05] hover:text-foreground",
 };
 
 export function Button({
@@ -42,11 +44,11 @@ export function Button({
       type="button"
       disabled={disabled || loading}
       className={cn(
-        "inline-flex items-center justify-center gap-1.5 rounded-[var(--radius)] font-medium transition-[background-color,color,box-shadow,opacity] duration-150",
+        "inline-flex items-center justify-center gap-1.5 rounded-[var(--radius)] font-semibold transition-[background-color,color,box-shadow,opacity,border-color] duration-150",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1",
         "disabled:cursor-not-allowed disabled:opacity-50",
         "active:scale-[0.98]",
-        size === "sm" ? "h-8 px-3 text-xs" : "h-9 px-3.5 text-sm",
+        size === "sm" ? "h-8 px-3 text-xs" : "h-9 px-4 text-sm",
         buttonVariants[variant],
         className
       )}
@@ -59,7 +61,7 @@ export function Button({
 }
 
 const toneClasses = {
-  gray: "bg-surface-muted text-muted ring-border",
+  gray: "bg-surface-muted text-muted ring-border-strong/70",
   green: "bg-success-soft text-success ring-emerald-200/80",
   yellow: "bg-warning-soft text-warning ring-amber-200/80",
   red: "bg-danger-soft text-danger ring-red-200/80",
@@ -68,16 +70,27 @@ const toneClasses = {
   purple: "bg-violet-50 text-violet-700 ring-violet-200/80",
 };
 
+const toneDots: Record<keyof typeof toneClasses, string> = {
+  gray: "bg-muted-soft",
+  green: "bg-emerald-500",
+  yellow: "bg-amber-500",
+  red: "bg-red-500",
+  blue: "bg-sky-500",
+  orange: "bg-primary",
+  purple: "bg-violet-500",
+};
+
 export type Tone = keyof typeof toneClasses;
 
 export function Badge({ tone = "gray", children }: { tone?: Tone; children: ReactNode }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center whitespace-nowrap rounded-md px-1.5 py-0.5 text-[11px] font-semibold tracking-wide ring-1 ring-inset",
+        "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ring-inset",
         toneClasses[tone]
       )}
     >
+      <span className={cn("size-1.5 shrink-0 rounded-full", toneDots[tone])} aria-hidden />
       {children}
     </span>
   );
@@ -135,15 +148,15 @@ export function Card({
   return (
     <section
       className={cn(
-        "min-w-0 overflow-hidden rounded-xl border border-border bg-surface shadow-[var(--shadow-sm)]",
+        "min-w-0 overflow-hidden rounded-2xl border border-border bg-surface shadow-card",
         className
       )}
     >
       {(title || actions) && (
-        <header className="flex flex-wrap items-center justify-between gap-2 border-b border-border/80 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
+        <header className="flex flex-wrap items-center justify-between gap-2 border-b border-border/70 px-3.5 py-3 sm:gap-3 sm:px-5 sm:py-3.5">
           <div className="min-w-0">
             {title && (
-              <h2 className="text-sm font-semibold tracking-tight text-ink">{title}</h2>
+              <h2 className="text-[15px] font-semibold tracking-tight text-ink">{title}</h2>
             )}
             {description && (
               <p className="mt-0.5 hidden text-xs text-muted sm:block">{description}</p>
@@ -152,13 +165,13 @@ export function Card({
           {actions && <div className="flex items-center gap-2">{actions}</div>}
         </header>
       )}
-      <div className={cn("p-3 sm:p-4", bodyClassName)}>{children}</div>
+      <div className={cn("p-3.5 sm:p-5", bodyClassName)}>{children}</div>
     </section>
   );
 }
 
 const fieldClass =
-  "w-full rounded-[var(--radius)] border border-border-strong bg-surface px-3 text-sm text-foreground shadow-[var(--shadow-sm)] outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-muted-soft focus:border-primary focus:ring-2 focus:ring-[var(--primary-ring)] disabled:bg-surface-muted disabled:text-muted";
+  "w-full rounded-[var(--radius)] border border-border-strong bg-surface px-3 text-sm text-foreground shadow-[var(--shadow-sm)] outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-muted-soft hover:border-muted-soft/70 focus:border-primary focus:ring-[3px] focus:ring-[var(--primary-ring)] disabled:bg-surface-muted disabled:text-muted";
 
 export function Input({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {
   return <input className={cn(fieldClass, "h-9", className)} {...props} />;
@@ -187,7 +200,7 @@ export function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-medium text-ink-soft">{label}</span>
+      <span className="mb-1.5 block text-xs font-semibold text-ink-soft">{label}</span>
       {children}
       {hint && <span className="mt-1.5 block text-xs text-muted">{hint}</span>}
     </label>
@@ -209,8 +222,8 @@ export function Spinner({ label = "Loading…" }: { label?: string }) {
 export function EmptyState({ title, description }: { title: string; description?: string }) {
   return (
     <div className="flex flex-col items-center justify-center gap-2 px-4 py-8 text-center sm:py-12">
-      <div className="mb-1 flex size-9 items-center justify-center rounded-full bg-surface-muted sm:size-10">
-        <Inbox className="size-4 text-muted-soft" aria-hidden />
+      <div className="mb-1 flex size-11 items-center justify-center rounded-2xl bg-surface-muted ring-1 ring-border sm:size-12">
+        <Inbox className="size-5 text-muted-soft" aria-hidden />
       </div>
       <p className="text-sm font-medium text-foreground">{title}</p>
       {description && <p className="max-w-sm text-xs leading-relaxed text-muted">{description}</p>}
@@ -222,8 +235,8 @@ export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () =>
   const message = error instanceof Error ? error.message : "Something went wrong";
   return (
     <div className="flex flex-col items-center justify-center gap-3 px-4 py-8 text-center sm:py-12">
-      <div className="mb-1 flex size-9 items-center justify-center rounded-full bg-danger-soft sm:size-10">
-        <AlertTriangle className="size-4 text-danger" aria-hidden />
+      <div className="mb-1 flex size-11 items-center justify-center rounded-2xl bg-danger-soft ring-1 ring-red-200/70 sm:size-12">
+        <AlertTriangle className="size-5 text-danger" aria-hidden />
       </div>
       <p className="max-w-md text-sm text-foreground">{message}</p>
       {onRetry && (
@@ -252,7 +265,7 @@ export function Avatar({ src, name, size = 32 }: { src?: string | null; name: st
   ) : (
     <span
       style={{ width: size, height: size }}
-      className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary-soft text-[11px] font-semibold text-primary-dark ring-1 ring-orange-200/60"
+      className="inline-flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary-soft to-orange-100 text-[11px] font-bold text-primary-dark ring-1 ring-orange-200/70"
     >
       {initials || "?"}
     </span>
@@ -280,7 +293,7 @@ export function KeyValue({ items }: { items: [string, ReactNode][] }) {
     <dl className="grid grid-cols-1 gap-x-6 gap-y-3.5 sm:grid-cols-2">
       {items.map(([label, value]) => (
         <div key={label} className="min-w-0">
-          <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-soft">{label}</dt>
+          <dt className="text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-soft">{label}</dt>
           <dd className="mt-1 break-words text-sm text-foreground">{value ?? "—"}</dd>
         </div>
       ))}
