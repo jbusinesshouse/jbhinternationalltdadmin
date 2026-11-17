@@ -20,11 +20,11 @@ export type Profile = ProfileLite & {
 export type OrderItem = {
   id?: string;
   quantity: number;
-  /** Unit charged (VAT-inclusive). */
+  /** Unit charged (incl. service charge). */
   price_snapshot: number;
   base_price_snapshot?: number | null;
-  vat_rate_snapshot?: number | null;
-  vat_amount_snapshot?: number | null;
+  service_charge_rate_snapshot?: number | null;
+  service_charge_amount_snapshot?: number | null;
   product_name_snapshot: string | null;
   product_variants?: { color: string | null } | null;
   product_sizes?: { size: string | null } | null;

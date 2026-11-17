@@ -16,6 +16,7 @@ import {
   ShieldAlert,
   ShoppingCart,
   Star,
+  Truck,
   Users,
   UsersRound,
   X,
@@ -52,6 +53,7 @@ const NAV: { section: string; items: NavItem[] }[] = [
       },
       { href: "/products", label: "Products", icon: Package },
       { href: "/orders", label: "Orders", icon: ShoppingCart },
+      { href: "/delivery", label: "Delivery", icon: Truck },
     ],
   },
   {
@@ -95,6 +97,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/users": "Users & stores",
   "/products": "Products",
   "/orders": "Orders",
+  "/delivery": "Delivery",
   "/ads": "Product ads",
   "/featured": "Featured stores",
   "/referrals": "Referral program",

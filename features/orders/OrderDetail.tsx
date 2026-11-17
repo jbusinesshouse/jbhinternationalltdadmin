@@ -16,6 +16,7 @@ import { Table, Td, Th, Tr } from "@/components/ui/Table";
 import { displayName, formatBdt, formatDateTime, shortId, titleCase } from "@/lib/format";
 import { useAdminQuery } from "@/lib/hooks";
 import type { OrderItem, ProfileLite } from "@/lib/types";
+import { ShipmentActions, ShipmentStatus, type Shipment } from "@/features/delivery/Delivery";
 
 type OrderDetailResponse = {
   order: {
@@ -45,6 +46,18 @@ type OrderDetailResponse = {
     created_at: string;
   }[];
   review: { id: string; rating: number; comment: string | null; created_at: string } | null;
+  /** Courier shipments (absent on older APIs). */
+  shipments?: (Shipment & {
+    events?: { event: string; pathao_status: string | null; source: string; applied: boolean; note: string | null; created_at: string }[];
+  })[];
+};
+
+type CourierFields = {
+  delivery_method?: string | null;
+  delivery_fee?: number | string | null;
+  cod_amount?: number | string | null;
+  cod_fee?: number | string | null;
+  parcel_weight_kg?: number | string | null;
 };
 
 function PartyCard({ title, person }: { title: string; person: ProfileLite | null }) {
@@ -76,6 +89,8 @@ export function OrderDetail({ id }: { id: string }) {
   if (error) return <ErrorState error={error} onRetry={() => void refetch()} />;
 
   const { order, product } = data;
+  const courier = order as typeof order & CourierFields;
+  const shipments = data.shipments ?? [];
 
   return (
     <>
@@ -110,7 +125,7 @@ export function OrderDetail({ id }: { id: string }) {
                   <Th>Size</Th>
                   <Th>Qty</Th>
                   <Th>Base</Th>
-                  <Th>VAT</Th>
+                  <Th>Service charge</Th>
                   <Th>Unit (incl.)</Th>
                   <Th className="text-right">Line total</Th>
                 </tr>
@@ -118,12 +133,12 @@ export function OrderDetail({ id }: { id: string }) {
               <tbody>
                 {order.order_items.map((item, i) => {
                   const base = item.base_price_snapshot;
-                  const vatAmt = item.vat_amount_snapshot;
-                  const vatRate = item.vat_rate_snapshot;
-                  const hasVat =
+                  const serviceChargeAmt = item.service_charge_amount_snapshot;
+                  const serviceChargeRate = item.service_charge_rate_snapshot;
+                  const hasServiceCharge =
                     base != null &&
-                    vatAmt != null &&
-                    Number(vatRate) > 0;
+                    serviceChargeAmt != null &&
+                    Number(serviceChargeRate) > 0;
                   return (
                     <Tr key={item.id ?? i}>
                       <Td>{item.product_name_snapshot ?? "—"}</Td>
@@ -134,10 +149,10 @@ export function OrderDetail({ id }: { id: string }) {
                         {base != null ? formatBdt(base) : "—"}
                       </Td>
                       <Td>
-                        {hasVat
-                          ? `${formatBdt(vatAmt)} (${Math.round(Number(vatRate) * 100)}%)`
-                          : vatAmt != null
-                            ? formatBdt(vatAmt)
+                        {hasServiceCharge
+                          ? `${formatBdt(serviceChargeAmt)} (${Math.round(Number(serviceChargeRate) * 100)}%)`
+                          : serviceChargeAmt != null
+                            ? formatBdt(serviceChargeAmt)
                             : "—"}
                       </Td>
                       <Td>{formatBdt(item.price_snapshot)}</Td>
@@ -180,6 +195,49 @@ export function OrderDetail({ id }: { id: string }) {
               <p className="text-sm text-gray-500">No notifications recorded.</p>
             )}
           </Card>
+
+          {(courier.delivery_method === "pathao" || shipments.length > 0) && (
+            <Card
+              title="Courier (Pathao)"
+              description={`Delivery fee ${formatBdt(courier.delivery_fee)} paid by buyer · COD ${formatBdt(courier.cod_amount)} · COD fee (JBH) ${formatBdt(courier.cod_fee)} · ${courier.parcel_weight_kg ?? "—"} kg`}
+            >
+              {shipments.length ? (
+                <ul className="space-y-4">
+                  {shipments.map((s) => (
+                    <li key={s.id} className="rounded-lg border border-gray-200 p-3">
+                      <div className="flex flex-wrap items-start justify-between gap-2">
+                        <div className="text-sm">
+                          <p className="font-mono text-xs font-semibold">{s.merchant_order_id}</p>
+                          <p className="text-xs text-gray-500">Consignment: {s.consignment_id ?? "—"}</p>
+                          <div className="mt-1 flex items-center gap-2">
+                            <ShipmentStatus status={s.status} />
+                            {s.pathao_status && <span className="text-xs text-gray-500">{s.pathao_status}</span>}
+                          </div>
+                          {(s.attention_reason || s.last_error) && (
+                            <p className="mt-1 text-xs text-red-600">{s.attention_reason ?? s.last_error}</p>
+                          )}
+                        </div>
+                        <ShipmentActions s={s} invalidate={["orders"]} />
+                      </div>
+                      {s.events && s.events.length > 0 && (
+                        <ol className="mt-3 space-y-1 border-t border-gray-100 pt-2 text-xs text-gray-600">
+                          {s.events.map((e, i) => (
+                            <li key={i}>
+                              {formatDateTime(e.created_at)} · {e.event}
+                              {e.pathao_status ? ` (${e.pathao_status})` : ""} · {e.source}
+                              {!e.applied ? ` · not applied${e.note ? `: ${e.note}` : ""}` : ""}
+                            </li>
+                          ))}
+                        </ol>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-gray-500">Not booked yet — waiting for the seller to accept the order.</p>
+              )}
+            </Card>
+          )}
 
           {data.review && (
             <Card title="Buyer review">
